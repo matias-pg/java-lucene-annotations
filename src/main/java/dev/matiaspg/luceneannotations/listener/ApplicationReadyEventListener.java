@@ -26,9 +26,11 @@ public class ApplicationReadyEventListener {
     LoadedArticlesEvent onApplicationEvent() throws IOException {
         log.info("Loading articles from Hacker News (using a local CSV)");
 
+        long start = System.currentTimeMillis();
         List<Article> articles = loadArticles();
+        long end = System.currentTimeMillis();
 
-        log.info("Loaded {} articles", articles.size());
+        log.info("Loaded {} articles, took {} ms", articles.size(), end - start);
 
         return new LoadedArticlesEvent(articles);
     }
@@ -41,7 +43,7 @@ public class ApplicationReadyEventListener {
         Iterable<CSVRecord> articleIterable = CsvLoader.load(reader);
 
         // Map each CSVRecord to an Article
-        return StreamSupport.stream(articleIterable.spliterator(), false)
+        return StreamSupport.stream(articleIterable.spliterator(), true)
                 .map(this::mapArticle)
                 .collect(Collectors.toList());
     }
