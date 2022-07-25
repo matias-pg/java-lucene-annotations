@@ -1,60 +1,60 @@
 package dev.matiaspg.luceneannotations.utils;
 
-import static dev.matiaspg.luceneannotations.utils.LuceneSearchUtils.getAnnotatedFields;
+import dev.matiaspg.luceneannotations.lucene.FieldIndexersContainer;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.lucene.document.Document;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-import org.apache.lucene.document.BinaryDocValuesField;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.document.LongPoint;
-import org.apache.lucene.document.StoredField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.IndexableField;
-import org.apache.lucene.util.BytesRef;
+import static dev.matiaspg.luceneannotations.utils.LuceneSearchUtils.getAnnotatedFields;
 
-import lombok.experimental.UtilityClass;
-
-@UtilityClass
+@Slf4j
 public class LuceneWriteUtils {
-    public <T> Document createDocumentFrom(T object) {
+    /**
+     * Creates a Lucene {@code Document} using the fields of an object.
+     *
+     * @param object                 Object whose fields will be indexed
+     * @param fieldIndexersContainer Container of {@code FieldIndexer}s
+     * @param <T>                    Type of the object
+     * @return The {@code Document} containing the object data
+     */
+    public static <T> Document createDocumentFrom(T object, FieldIndexersContainer fieldIndexersContainer) {
         Document doc = new Document();
 
+        // Get the fields that have our annotations
         Field[] indexedFields = getAnnotatedFields(object.getClass());
 
         for (Field field : indexedFields) {
+            // Make them accessible since they are probably private
             field.setAccessible(true);
             try {
-                List<IndexableField> indexableFields = fieldsFor(field, object);
-                indexableFields.forEach(doc::add);
+                // Get the value of the field
+                var value = field.get(object);
+
+                // Index the field
+                index(field, value, doc, fieldIndexersContainer);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                // Shouldn't happen, but if it happens just ignore the field
+                // Shouldn't happen, but if it happens log the error just in case
+                log.warn("Couldn't index a field", e);
             }
         }
 
         return doc;
     }
 
-    // TODO: Improve this method
-    private List<IndexableField> fieldsFor(Field field, Object object)
-            throws IllegalArgumentException, IllegalAccessException {
-        List<IndexableField> fields = new ArrayList<>();
+    private static <T> void index(
+            Field field,
+            T value,
+            Document doc,
+            FieldIndexersContainer fieldIndexersContainer
+    ) {
+        // TODO: Check an alternative that doesn't require suppressing
 
-        String name = field.getName();
-        Object value = field.get(object);
+        @SuppressWarnings("unchecked")
+        // Get the type of the field
+        Class<T> fieldType = (Class<T>) field.getType();
 
-        if (Number.class.isAssignableFrom(field.getType())) {
-            fields.add(new LongPoint(name, (Integer) value));
-            fields.add(new StoredField(name, Objects.toString(value)));
-        } else if (CharSequence.class.isAssignableFrom(field.getType())) {
-            fields.add(new TextField(name, Objects.toString(value), Store.YES));
-        } else {
-            fields.add(new BinaryDocValuesField(name, new BytesRef(Objects.toString(value))));
-        }
-
-        return fields;
+        // Indexes the field using an indexer for the field type
+        fieldIndexersContainer.getFor(fieldType).index(field, value, doc);
     }
 }

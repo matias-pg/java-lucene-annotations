@@ -27,7 +27,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Article findById(Integer id) {
+    public Article findById(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Article not found"));
     }
@@ -43,19 +43,19 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void update(Integer id, Article article) {
+    public void update(String id, Article article) {
         assertExists(id);
         article.setId(id);
         repository.save(article);
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         assertExists(id);
         repository.deleteById(id);
     }
 
-    private void assertExists(Integer id) {
+    private void assertExists(String id) {
         var exists = repository.existsById(id);
         if (!exists) {
             throw new NotFoundException("Article not found");

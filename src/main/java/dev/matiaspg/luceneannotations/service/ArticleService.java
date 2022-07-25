@@ -11,13 +11,13 @@ public interface ArticleService {
 
     List<Article> search(String term, Pageable pageable);
 
-    Article findById(Integer id);
+    Article findById(String id);
 
     Article save(Article article);
 
     List<Article> saveAll(Iterable<Article> articles);
 
-    void update(Integer id, Article article);
+    void update(String id, Article article);
 
-    void delete(Integer id);
+    void delete(String id);
 }

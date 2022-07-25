@@ -1,14 +1,18 @@
 package dev.matiaspg.luceneannotations.event;
 
+import lombok.Builder;
+import lombok.Data;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.store.Directory;
 
-import lombok.Builder;
-import lombok.Data;
-
 @Data
 @Builder
-public class FinishedIndexingEvent {
+public class FinishedIndexingEvent<T> {
     private final Directory directory;
     private final Analyzer analyzer;
+
+    /**
+     * @see LoadedIndexableItemsEvent#getTargetClass()
+     */
+    private final Class<T> targetClass;
 }

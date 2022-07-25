@@ -1,7 +1,10 @@
 package dev.matiaspg.luceneannotations.listener;
 
-import java.io.IOException;
-
+import dev.matiaspg.luceneannotations.event.FinishedIndexingEvent;
+import dev.matiaspg.luceneannotations.lucene.SearchableIndex;
+import dev.matiaspg.luceneannotations.lucene.SearchableIndexContainer;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -10,12 +13,7 @@ import org.apache.lucene.store.Directory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import dev.matiaspg.luceneannotations.event.FinishedIndexingEvent;
-import dev.matiaspg.luceneannotations.lucene.SearchableIndex;
-import dev.matiaspg.luceneannotations.lucene.SearchableIndexContainer;
-import dev.matiaspg.luceneannotations.model.Article;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
 
 @Slf4j
 @Component
@@ -24,21 +22,25 @@ public class FinishedIndexingEventListener {
     private final SearchableIndexContainer searchIndexContainer;
 
     @EventListener
-    void onApplicationEvent(FinishedIndexingEvent event) throws IOException {
-        log.info("Using the new index");
+    <T> void onApplicationEvent(FinishedIndexingEvent<T> event) throws IOException {
+        log.info("Using the new index for future searches");
 
+        // Get the Directory and Analyzer used while indexing
         Directory directory = event.getDirectory();
         Analyzer analyzer = event.getAnalyzer();
 
+        // Create the index reader that will be used in future searches
         IndexReader reader = DirectoryReader.open(directory);
         IndexSearcher searcher = new IndexSearcher(reader);
 
+        // Create a SearchableIndex
         SearchableIndex searchableIndex = SearchableIndex.builder()
                 .directory(directory)
                 .analyzer(analyzer)
                 .searcher(searcher)
                 .build();
 
-        searchIndexContainer.setFor(Article.class, searchableIndex);
+        // Make the SearchableIndex available for future searches
+        searchIndexContainer.setFor(event.getTargetClass(), searchableIndex);
     }
 }

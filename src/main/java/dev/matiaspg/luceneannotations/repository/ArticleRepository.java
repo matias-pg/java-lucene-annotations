@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import dev.matiaspg.luceneannotations.model.Article;
 
 @Repository
-public interface ArticleRepository extends JpaRepository<Article, Integer> {
+public interface ArticleRepository extends JpaRepository<Article, String> {
 }
