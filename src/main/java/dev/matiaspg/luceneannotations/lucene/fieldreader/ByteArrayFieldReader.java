@@ -4,7 +4,7 @@ import org.apache.lucene.index.IndexableField;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BinaryFieldReader implements FieldReader<byte[]> {
+public class ByteArrayFieldReader implements FieldReader<byte[]> {
     @Override
     public boolean supports(Class<?> fieldType) {
         return byte[].class.isAssignableFrom(fieldType);

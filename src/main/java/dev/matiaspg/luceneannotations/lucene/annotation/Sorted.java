@@ -9,6 +9,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Sorted {
     String SORT_FIELD_SUFFIX = "--sorted";
-
-    String value() default "";
 }

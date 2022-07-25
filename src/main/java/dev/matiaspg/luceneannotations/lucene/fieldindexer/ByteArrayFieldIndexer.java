@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 
 @Component
-public class BinaryFieldIndexer implements FieldIndexer<byte[]> {
+public class ByteArrayFieldIndexer implements FieldIndexer<byte[]> {
     @Override
     public boolean supports(Class<?> fieldType) {
         return byte[].class.isAssignableFrom(fieldType);

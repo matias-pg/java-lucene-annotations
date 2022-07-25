@@ -23,7 +23,6 @@ public class SearchServiceImpl implements SearchService {
     private final SearchableIndexContainer indexesContainer;
     private final FieldReadersContainer fieldReadersContainer;
 
-
     @Override
     public <T> List<T> search(Class<T> targetClass, String term, Pageable pageable) {
         SearchableIndex index = indexesContainer.getFor(targetClass);
