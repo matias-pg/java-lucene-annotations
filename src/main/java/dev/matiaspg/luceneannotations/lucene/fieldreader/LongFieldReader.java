@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class LongFieldReader implements FieldReader<Long> {
     @Override
-    public boolean supports(Class<?> fieldType) {
-        return Long.class.isAssignableFrom(fieldType);
+    public Class<Long> supportedType() {
+        return Long.class;
     }
 
     @Override

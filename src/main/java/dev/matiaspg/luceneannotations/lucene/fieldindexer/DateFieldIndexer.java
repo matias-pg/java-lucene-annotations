@@ -13,21 +13,20 @@ import java.util.Date;
 @Component
 public class DateFieldIndexer implements FieldIndexer<Date> {
     @Override
-    public boolean supports(Class<?> fieldType) {
-        return Date.class.isAssignableFrom(fieldType);
+    public Class<Date> supportedType() {
+        return Date.class;
     }
 
     @Override
     public void index(Field field, Date value, Document doc) {
-        boolean isSorted = field.isAnnotationPresent(Sorted.class);
-
         String stringValue = value.toInstant().toString();
 
         doc.add(new StoredField(field.getName(), stringValue));
-        if (isSorted) {
-            var name = field.getName() + Sorted.SORT_FIELD_SUFFIX;
 
-            doc.add(new SortedDocValuesField(name, new BytesRef(stringValue)));
+        if (isSorted(field)) {
+            var sortedFieldName = field.getName() + Sorted.SORT_FIELD_SUFFIX;
+
+            doc.add(new SortedDocValuesField(sortedFieldName, new BytesRef(stringValue)));
         }
     }
 }

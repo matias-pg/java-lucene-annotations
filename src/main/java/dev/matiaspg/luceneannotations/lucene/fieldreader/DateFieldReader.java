@@ -9,8 +9,8 @@ import java.util.Date;
 @Component
 public class DateFieldReader implements FieldReader<Date> {
     @Override
-    public boolean supports(Class<?> fieldType) {
-        return Date.class.isAssignableFrom(fieldType);
+    public Class<Date> supportedType() {
+        return Date.class;
     }
 
     @Override

@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class IntegerFieldReader implements FieldReader<Integer> {
     @Override
-    public boolean supports(Class<?> fieldType) {
-        return Integer.class.isAssignableFrom(fieldType);
+    public Class<Integer> supportedType() {
+        return Integer.class;
     }
 
     @Override

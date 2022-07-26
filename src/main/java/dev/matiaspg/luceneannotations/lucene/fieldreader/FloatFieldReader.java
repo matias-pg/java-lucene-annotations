@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class FloatFieldReader implements FieldReader<Float> {
     @Override
-    public boolean supports(Class<?> fieldType) {
-        return Float.class.isAssignableFrom(fieldType);
+    public Class<Float> supportedType() {
+        return Float.class;
     }
 
     @Override

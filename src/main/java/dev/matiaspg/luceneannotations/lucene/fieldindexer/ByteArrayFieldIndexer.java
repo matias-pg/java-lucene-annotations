@@ -10,8 +10,8 @@ import java.lang.reflect.Field;
 @Component
 public class ByteArrayFieldIndexer implements FieldIndexer<byte[]> {
     @Override
-    public boolean supports(Class<?> fieldType) {
-        return byte[].class.isAssignableFrom(fieldType);
+    public Class<byte[]> supportedType() {
+        return byte[].class;
     }
 
     @Override

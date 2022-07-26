@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DoubleFieldReader implements FieldReader<Double> {
     @Override
-    public boolean supports(Class<?> fieldType) {
-        return Double.class.isAssignableFrom(fieldType);
+    public Class<Double> supportedType() {
+        return Double.class;
     }
 
     @Override

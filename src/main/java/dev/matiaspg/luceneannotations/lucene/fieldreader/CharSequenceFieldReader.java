@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CharSequenceFieldReader implements FieldReader<CharSequence> {
     @Override
-    public boolean supports(Class<?> fieldType) {
-        return CharSequence.class.isAssignableFrom(fieldType);
+    public Class<CharSequence> supportedType() {
+        return CharSequence.class;
     }
 
     @Override

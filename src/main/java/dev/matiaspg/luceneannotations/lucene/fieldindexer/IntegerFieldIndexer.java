@@ -1,6 +1,5 @@
 package dev.matiaspg.luceneannotations.lucene.fieldindexer;
 
-import dev.matiaspg.luceneannotations.lucene.annotation.Stored;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.StoredField;
@@ -12,16 +11,15 @@ import java.util.Objects;
 @Component
 public class IntegerFieldIndexer implements FieldIndexer<Integer> {
     @Override
-    public boolean supports(Class<?> fieldType) {
-        return Integer.class.isAssignableFrom(fieldType);
+    public Class<Integer> supportedType() {
+        return Integer.class;
     }
 
     @Override
     public void index(Field field, Integer value, Document doc) {
-        boolean isStored = field.isAnnotationPresent(Stored.class);
-
         doc.add(new LongPoint(field.getName(), value));
-        if (isStored) {
+
+        if (isStored(field)) {
             doc.add(new StoredField(field.getName(), Objects.toString(value)));
         }
     }

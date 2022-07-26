@@ -1,6 +1,6 @@
 package dev.matiaspg.luceneannotations.listener;
 
-import dev.matiaspg.luceneannotations.event.LoadedArticlesEvent;
+import dev.matiaspg.luceneannotations.event.LoadedIndexableItemsEvent;
 import dev.matiaspg.luceneannotations.model.Article;
 import dev.matiaspg.luceneannotations.utils.CsvLoader;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.stream.StreamSupport;
 @Component
 public class ApplicationReadyEventListener {
     @EventListener(ApplicationReadyEvent.class)
-    LoadedArticlesEvent onApplicationEvent() throws IOException {
+    LoadedIndexableItemsEvent<Article> onApplicationEvent() throws IOException {
         log.info("Loading articles from Hacker News (using a local CSV)");
 
         long start = System.currentTimeMillis();
@@ -32,7 +32,7 @@ public class ApplicationReadyEventListener {
 
         log.info("Loaded {} articles, took {} ms", articles.size(), end - start);
 
-        return new LoadedArticlesEvent(articles);
+        return LoadedIndexableItemsEvent.of(Article.class, articles);
     }
 
     private List<Article> loadArticles() throws IOException {
