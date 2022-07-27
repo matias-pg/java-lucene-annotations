@@ -11,13 +11,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Builder
 public class IndexChunkCreatedEvent<T> {
     private final List<T> chunk;
+    private final Class<T> itemType;
+
     private final int chunkNumber;
     private final int totalChunks;
     private final AtomicInteger remainingCount;
-    private final WritableIndex writableIndex;
 
-    /**
-     * @see LoadedIndexableItemsEvent#getTargetClass()
-     */
-    private final Class<T> targetClass;
+    private final String indexId;
+    private final WritableIndex writableIndex;
 }

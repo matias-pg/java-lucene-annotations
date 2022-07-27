@@ -56,7 +56,8 @@ public class IndexChunkCreatedEventListener {
             FinishedIndexingEvent<T> finishedIndexingEvent = FinishedIndexingEvent.<T>builder()
                     .directory(writableIndex.getDirectory())
                     .analyzer(writableIndex.getAnalyzer())
-                    .targetClass(event.getTargetClass())
+                    .itemType(event.getItemType())
+                    .indexId(event.getIndexId())
                     .build();
 
             // Publish the event

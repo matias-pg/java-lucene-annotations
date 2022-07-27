@@ -14,16 +14,16 @@ public class FieldIndexersContainer {
     // TODO: Cache the indexers for each type
 
     /**
-     * Gets a {@code FieldIndexer} for a specific type.
+     * Gets a {@link FieldIndexer} for a specific type.
      *
      * @param fieldType The field type for which an indexer will be retrieved
      * @param <T>       The field type
-     * @return The {@code FieldIndexer}
+     * @return The {@link FieldIndexer}
      */
     public <T> FieldIndexer<T> getFor(Class<T> fieldType) {
         // TODO: Check an alternative that doesn't require suppressing
 
-        // The type is guaranteed by the `supports()` guard function
+        // The cast is safe, since `supports()` guarantees compatibility
         @SuppressWarnings("unchecked")
         FieldIndexer<T> indexer = (FieldIndexer<T>) fieldIndexers
                 .stream()

@@ -24,19 +24,19 @@ public class SearchServiceImpl implements SearchService {
     private final FieldReadersContainer fieldReadersContainer;
 
     @Override
-    public <T> List<T> search(Class<T> targetClass, String term, Pageable pageable) {
-        SearchableIndex index = indexesContainer.getFor(targetClass);
+    public List<?> search(String indexId, String searchTerm, Pageable pageable) {
+        SearchableIndex<?> index = indexesContainer.get(indexId);
 
-        String[] fields = getAnnotatedFieldNames(targetClass);
+        String[] fields = getAnnotatedFieldNames(index.getItemType());
 
         try {
-            Query query = createQueryFor(term, fields, index.getAnalyzer());
+            Query query = createQueryFor(searchTerm, fields, index.getAnalyzer());
 
             IndexSearcher searcher = index.getSearcher();
 
             TopDocs topDocs = topDocsFor(query, pageable, searcher);
 
-            return asListOf(targetClass, topDocs, searcher, fieldReadersContainer);
+            return asListOf(index.getItemType(), topDocs, searcher, fieldReadersContainer);
         } catch (ParseException | IOException e) {
             throw new BadRequestException("Invalid search term", e);
         }

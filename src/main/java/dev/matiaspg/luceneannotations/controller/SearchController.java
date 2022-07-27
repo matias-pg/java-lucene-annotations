@@ -1,26 +1,28 @@
 package dev.matiaspg.luceneannotations.controller;
 
-import dev.matiaspg.luceneannotations.model.Article;
-import dev.matiaspg.luceneannotations.service.ArticleService;
+import dev.matiaspg.luceneannotations.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/articles")
+@RequestMapping("/search")
 @RequiredArgsConstructor
-public class ArticleController {
-    private final ArticleService service;
+public class SearchController {
+    private final SearchService searchService;
 
-    @GetMapping("/search")
-    public List<Article> search(
-            @RequestParam("q") String term,
+    /**
+     * Search items in an index.
+     * <p>
+     * Useful to search for "blog_articles" or "support_articles", for example.
+     */
+    @GetMapping("/{indexId}")
+    public List<?> search(
+            @PathVariable String indexId,
+            @RequestParam("q") String searchTerm,
             @RequestParam String order,
             Pageable pageable
     ) {
@@ -32,7 +34,7 @@ public class ArticleController {
                 pageable.getPageSize(),
                 isDescending ? pageable.getSort().descending() : pageable.getSort()
         );
-        
-        return service.search(term, sortedPageable);
+
+        return searchService.search(indexId, searchTerm, sortedPageable);
     }
 }

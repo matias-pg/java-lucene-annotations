@@ -14,16 +14,16 @@ public class FieldReadersContainer {
     // TODO: Cache the readers for each type
 
     /**
-     * Gets a {@code FieldReader} for a specific type.
+     * Gets a {@link FieldReader} for a specific type.
      *
      * @param fieldType The field type for which a reader will be retrieved
      * @param <T>       The field type
-     * @return The {@code FieldReader}
+     * @return The {@link FieldReader}
      */
     public <T> FieldReader<T> getFor(Class<T> fieldType) {
         // TODO: Check an alternative that doesn't require suppressing
 
-        // The type is guaranteed by the `supports()` guard function
+        // The cast is safe, since `supports()` guarantees compatibility
         @SuppressWarnings("unchecked")
         FieldReader<T> reader = (FieldReader<T>) fieldReaders
                 .stream()

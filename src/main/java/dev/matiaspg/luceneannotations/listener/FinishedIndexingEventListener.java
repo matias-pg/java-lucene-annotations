@@ -34,13 +34,14 @@ public class FinishedIndexingEventListener {
         IndexSearcher searcher = new IndexSearcher(reader);
 
         // Create a SearchableIndex
-        SearchableIndex searchableIndex = SearchableIndex.builder()
+        SearchableIndex<T> searchableIndex = SearchableIndex.<T>builder()
                 .directory(directory)
                 .analyzer(analyzer)
                 .searcher(searcher)
+                .itemType(event.getItemType())
                 .build();
 
         // Make the SearchableIndex available for future searches
-        searchIndexContainer.setFor(event.getTargetClass(), searchableIndex);
+        searchIndexContainer.put(event.getIndexId(), searchableIndex);
     }
 }

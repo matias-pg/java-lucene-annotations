@@ -1,6 +1,7 @@
 package dev.matiaspg.luceneannotations.utils;
 
 import dev.matiaspg.luceneannotations.lucene.FieldIndexersContainer;
+import dev.matiaspg.luceneannotations.lucene.fieldindexer.FieldIndexer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.document.Document;
 
@@ -11,12 +12,12 @@ import static dev.matiaspg.luceneannotations.utils.LuceneSearchUtils.getAnnotate
 @Slf4j
 public class LuceneWriteUtils {
     /**
-     * Creates a Lucene {@code Document} using the fields of an object.
+     * Creates a Lucene {@link Document} using the fields of an object.
      *
      * @param object                 Object whose fields will be indexed
-     * @param fieldIndexersContainer Container of {@code FieldIndexer}s
+     * @param fieldIndexersContainer Container of {@link FieldIndexer}s
      * @param <T>                    Type of the object
-     * @return The {@code Document} containing the object data
+     * @return The {@link Document} containing the object data
      */
     public static <T> Document createDocumentFrom(T object, FieldIndexersContainer fieldIndexersContainer) {
         Document doc = new Document();
@@ -50,8 +51,8 @@ public class LuceneWriteUtils {
     ) {
         // TODO: Check an alternative that doesn't require suppressing
 
-        @SuppressWarnings("unchecked")
         // Get the type of the field
+        @SuppressWarnings("unchecked")
         Class<T> fieldType = (Class<T>) field.getType();
 
         // Indexes the field using an indexer for the field type

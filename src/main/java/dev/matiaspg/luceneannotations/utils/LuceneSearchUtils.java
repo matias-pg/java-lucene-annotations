@@ -4,6 +4,7 @@ import dev.matiaspg.luceneannotations.lucene.FieldReadersContainer;
 import dev.matiaspg.luceneannotations.lucene.annotation.Indexed;
 import dev.matiaspg.luceneannotations.lucene.annotation.Sorted;
 import dev.matiaspg.luceneannotations.lucene.annotation.Stored;
+import dev.matiaspg.luceneannotations.lucene.fieldreader.FieldReader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -27,8 +28,8 @@ public class LuceneSearchUtils {
     public static Field[] getAnnotatedFields(Class<?> targetClass) {
         return Arrays.stream(targetClass.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Indexed.class)
-                        || field.isAnnotationPresent(Stored.class)
-                        || field.isAnnotationPresent(Sorted.class))
+                        || field.isAnnotationPresent(Sorted.class)
+                        || field.isAnnotationPresent(Stored.class))
                 .toArray(Field[]::new);
     }
 
@@ -38,14 +39,14 @@ public class LuceneSearchUtils {
                 .toArray(String[]::new);
     }
 
-    public static Query createQueryFor(String term, String[] fields, Analyzer analyzer) throws ParseException {
+    public static Query createQueryFor(String searchTerm, String[] fields, Analyzer analyzer) throws ParseException {
         MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer);
 
-        // Important: this causes a huge drop in performance,
-        // in exchange for making the search more flexible
+        // Important: this makes the search more flexible,
+        // but it also makes it a lot slower
         parser.setAllowLeadingWildcard(true);
 
-        return parser.parse("*" + QueryParserBase.escape(term) + "*");
+        return parser.parse("*" + QueryParserBase.escape(searchTerm) + "*");
     }
 
     public static TopDocs topDocsFor(Query query, Pageable pageable, IndexSearcher searcher) throws IOException {
@@ -70,7 +71,7 @@ public class LuceneSearchUtils {
         SortField[] fields = sort.stream()
                 .map(order -> new SortField(
                         order.getProperty() + Sorted.SORT_FIELD_SUFFIX,
-                        SortField.Type.STRING,
+                        SortField.Type.STRING, // TODO: Make this dynamic
                         order.getDirection().isDescending()))
                 .toArray(SortField[]::new);
 
@@ -98,12 +99,12 @@ public class LuceneSearchUtils {
     }
 
     /**
-     * Creates an object of type {@code T} using the fields of an indexed
-     * {@code Document}.
+     * Creates an object of type {@link T} using the fields of an indexed
+     * {@link Document}.
      *
      * @param targetClass           The class that will be created
-     * @param doc                   {@code Document} containing the indexed fields
-     * @param fieldReadersContainer Container of {@code FieldReader}s
+     * @param doc                   {@link Document} containing the indexed fields
+     * @param fieldReadersContainer Container of {@link FieldReader}s
      * @param <T>                   Type of the object
      * @return The object containing the indexed data
      */

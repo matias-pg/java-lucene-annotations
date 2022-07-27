@@ -1,9 +1,8 @@
 package dev.matiaspg.luceneannotations.exception;
 
+import lombok.experimental.StandardException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import lombok.experimental.StandardException;
 
 @StandardException
 @ResponseStatus(HttpStatus.NOT_FOUND)

@@ -8,47 +8,44 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.util.Date;
 
-@Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Article {
-    @Id
-    @GeneratedValue
     @Indexed
     @Stored
     private String id;
 
     @Indexed
-    @Stored
     @Sorted
+    @Stored
     private String title;
 
     @Indexed
+    @Sorted
     @Stored
-    // @Sorted
     private String author;
 
-    @Column(length = 1000)
-    // @Indexed
+    @Indexed
+    @Sorted
     @Stored
     private String url;
 
+    @Indexed
+    @Sorted
     @Stored
     private Long points;
 
+    @Indexed
+    @Sorted
     @Stored
     private Long numberOfComments;
 
     @Indexed
-    @Stored
     @Sorted
+    @Stored
     private Date createdAt;
 }

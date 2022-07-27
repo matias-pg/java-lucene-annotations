@@ -1,23 +1,32 @@
 package dev.matiaspg.luceneannotations.lucene;
 
+import dev.matiaspg.luceneannotations.exception.IndexNotAvailableException;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
+/**
+ * Class that contains all {@link SearchableIndex}es that are available at the
+ * moment.
+ * <p>
+ * Note that is has the limitation
+ */
 @Component
 public class SearchableIndexContainer {
-    private final Map<Class<?>, SearchableIndex> indexes = new HashMap<>();
+    private final Map<String, SearchableIndex<?>> indexes = new HashMap<>();
 
-    public SearchableIndex getFor(Class<?> targetClass) {
-        return Objects.requireNonNull(
-                indexes.get(targetClass),
-                "No index was found for \"" + targetClass.getSimpleName() + "\""
-        );
+    public SearchableIndex<?> get(String indexId) {
+        SearchableIndex<?> found = indexes.get(indexId);
+
+        if (found == null) {
+            throw new IndexNotAvailableException("No index was found for \"" + indexId + "\"");
+        }
+
+        return found;
     }
 
-    public void setFor(Class<?> targetClass, SearchableIndex index) {
-        indexes.put(targetClass, index);
+    public void put(String indexId, SearchableIndex<?> searchableIndex) {
+        indexes.put(indexId, searchableIndex);
     }
 }

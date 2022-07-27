@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
+/**
+ * Example class, not used currently.
+ */
 @Component
 public class FloatFieldIndexer implements FieldIndexer<Float> {
     @Override

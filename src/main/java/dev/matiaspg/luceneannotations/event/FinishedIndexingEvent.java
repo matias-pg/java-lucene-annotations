@@ -12,7 +12,8 @@ public class FinishedIndexingEvent<T> {
     private final Analyzer analyzer;
 
     /**
-     * @see LoadedIndexableItemsEvent#getTargetClass()
+     * @see IndexItemsLoadedEvent#getItemType()
      */
-    private final Class<T> targetClass;
+    private final Class<T> itemType;
+    private final String indexId;
 }

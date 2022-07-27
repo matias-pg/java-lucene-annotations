@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 
+/**
+ * Example class, not used currently.
+ */
 @Component
 public class ByteArrayFieldIndexer implements FieldIndexer<byte[]> {
     @Override
